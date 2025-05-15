@@ -1,0 +1,10 @@
+{
+    "name": "my-airflow-env", 
+    "extensions": [
+      "ms-azuretools.vscode-docker",
+      "ms-python.python",
+      "ms-toolsai.jupyter",
+      "linjun.ftp-support"
+    ]
+  }
+  

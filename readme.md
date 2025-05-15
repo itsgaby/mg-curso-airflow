@@ -156,3 +156,72 @@ docker-compose exec airflow-webserver airflow dags list-import-errors
 
 
 ```
+
+# Probar Airflow 3.0.0 (versión nueva)
+
+Si querés probar la nueva versión de Apache Airflow 3.0.0, este repositorio ya incluye una configuración lista para eso.
+
+## 1. Cambiá el archivo `docker-compose`
+
+1. Abrí la terminal integrada.
+2. Ejecutá el siguiente comando para usar la nueva configuración:
+
+```bash
+cp docker-compose-3.0.0.yaml docker-compose.yaml
+```
+
+> Esto reemplaza la versión por defecto (2.7.3) con la nueva (3.0.0).
+
+---
+
+## 2. Limpiá recursos anteriores (opcional pero recomendado)
+
+Antes de iniciar Airflow 3.0.0, te sugerimos limpiar volúmenes, contenedores e imágenes para evitar conflictos:
+
+```bash
+# Elimina contenedores, volúmenes y servicios huérfanos
+docker compose down --volumes --remove-orphans
+
+# Borra imágenes no utilizadas
+docker image prune -f
+```
+
+Si querés borrar la imagen anterior (por ejemplo, 2.7.3) manualmente:
+
+```bash
+docker rmi apache/airflow:2.7.3
+```
+
+---
+
+## 3. Inicializá y levantá Airflow 3.0.0
+
+```bash
+docker compose up airflow-init
+docker compose up
+```
+
+---
+
+## 4. Accedé a la nueva interfaz
+
+* Hacé clic en el ícono `Ports` en Codespaces.
+* Abrí el puerto `8080` en el navegador.
+* Ingresá con:
+
+```
+Usuario: airflow
+Contraseña: airflow
+```
+
+---
+
+## 5. ¿Qué cambia en Airflow 3.0.0?
+
+* Se usa un nuevo servicio: `airflow-apiserver`.
+* Aparece un nuevo componente: `airflow-dag-processor`.
+* Cambia el sistema de autenticación a `FabAuthManager`.
+* Redis se actualiza a la versión `7.2-bookworm`.
+
+Más detalles en las [notas de la versión oficial](https://github.com/apache/airflow/releases).
+ 

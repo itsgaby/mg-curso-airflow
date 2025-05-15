@@ -29,13 +29,14 @@ show_menu() {
   echo "5. Reiniciar el scheduler"
   echo "6. Reiniciar el webserver"
   echo "7. Ejecutar un DAG manualmente"
-  echo "8. Salir"
+  echo "8. Limpiar (clear) ejecución de un DAG"
+  echo "9. Salir"
   echo "============================================================"
   echo ""
 }
 
 read_choice() {
-  read -p "Seleccioná una opción [1-8]: " opcion
+  read -p "Seleccioná una opción [1-9]: " opcion
   case $opcion in
     1)
       echo "Listando DAGs..."
@@ -66,11 +67,22 @@ read_choice() {
       $COMPOSE exec airflow-webserver airflow dags trigger "$dag_id"
       ;;
     8)
+      read -p "Ingresá el ID del DAG a limpiar: " dag_id
+      read -p "¿Limpiar también tareas descendientes? (s/n): " downstream
+      if [[ "$downstream" == "s" || "$downstream" == "S" ]]; then
+        DS_FLAG="--downstream"
+      else
+        DS_FLAG=""
+      fi
+      echo "Limpiando ejecución de $dag_id ..."
+      $COMPOSE exec airflow-webserver airflow tasks clear $DS_FLAG "$dag_id" --yes
+      ;;
+    9)
       echo "Saliendo del script."
       exit 0
       ;;
     *)
-      echo "Opción inválida. Por favor, ingresá un número del 1 al 8."
+      echo "Opción inválida. Por favor, ingresá un número del 1 al 9."
       ;;
   esac
 }

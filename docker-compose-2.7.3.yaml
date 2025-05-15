@@ -119,22 +119,6 @@ services:
       start_period: 5s
     restart: always
 
-  ftp:
-    image: fauria/vsftpd
-    restart: always
-    ports:
-      - "2121:21"
-      - "21000-21010:21000-21010"  # Passive ports
-    environment:
-      - FTP_USER=airflow
-      - FTP_PASS=airflow
-      - PASV_ADDRESS=127.0.0.1
-      - PASV_MIN_PORT=21000
-      - PASV_MAX_PORT=21010
-      - PASV_ENABLE=YES
-      - LOG_STDOUT=YES
-    volumes:
-      - ./ftp_data:/home/vsftpd
 
   redis:
     image: redis:latest
@@ -152,7 +136,7 @@ services:
     <<: *airflow-common
     command: webserver
     ports:
-      - "80:8080"
+      - "8080:8080"
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
       interval: 30s
